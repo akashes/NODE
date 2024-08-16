@@ -1,0 +1,57 @@
+const express = require('express');
+const { readFile } = require('fs');
+const path = require('path')
+const cors = require('cors')
+const multer = require('multer');
+
+
+const app = express()
+app.use(cors())
+app.use(express.json())
+const PORT = 4000
+const upload = multer()
+
+
+app.get('/signup',(req,res)=>{
+    const filePath = path.join(__dirname,'signup.html')
+  
+    res.sendFile(filePath)
+})
+
+app.post('/signup',upload.none(),(req,res)=>{
+    console.log('inside post signup')
+    console.log(req.body)
+})
+app.listen(PORT,()=>{
+    console.log(`server started and listening in the port ${PORT}`)
+})
+
+/////////////////////////////////////////
+<body>
+   <main >
+    <form id="form" action="/signup" method="post">
+        <input id="username" name="uname" type="text" placeholder="username">
+        <input id="email" name="email" type="text" placeholder="email">
+        <input id="password" name="password" type="password" placeholder="password">
+        <button id="button" type="submit">submit</button>
+    </form>
+   </main>
+
+   <script>
+    document.getElementById('form').addEventListener('submit',function(e){
+        e.preventDefault()
+        
+        console.log(this)
+        const formData = new FormData(this)
+    //     for (let [key, value] of formData.entries()) {
+    //     console.log(`${key}: ${value}`);
+    // }
+        console.log(formData)
+        fetch('http://localhost:4000/signup',{
+            method:'POST',
+            body:formData
+        })
+    })
+   </script>
+    
+</body>
